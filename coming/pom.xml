@@ -1,0 +1,239 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>fr.inria.sacha.remining</groupId>
+	<artifactId>coming</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>coming</name>
+	<url>matias</url>
+
+	<developers>
+		<developer>
+			<id>matias</id>
+			<name>Matias Martinez</name>
+			<email>matias.martinez@inria.fr</email>
+		</developer>
+	</developers>
+
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.15</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.sun.jmx</groupId>
+					<artifactId>jmxri</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sun.jdmk</groupId>
+					<artifactId>jmxtools</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>javax.jms</groupId>
+					<artifactId>jms</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+
+		<dependency>
+			<groupId>fr.labri.gumtree</groupId>
+			<artifactId>core</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>fr.labri.gumtree</groupId>
+			<artifactId>gen</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.4</version>
+			<scope>test</scope>
+		</dependency>
+	
+
+ <!-- Dep For the parser -->
+ 		 <dependency>
+			<groupId>eclipse</groupId>
+			<artifactId>org.eclipse.core.contenttype</artifactId>
+			<version>3.4.100.v20110423-0524</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>eclipse</groupId>
+			<artifactId>org.eclipse.core.jobs</artifactId>
+			<version>3.5.100.v20110404</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>eclipse</groupId>
+			<artifactId>org.eclipse.core.resources</artifactId>
+			<version>3.7.100.v20110510-0712</version>
+			<scope>compile</scope>
+		</dependency> 
+		<dependency>
+			<groupId>eclipse</groupId>
+			<artifactId>org.eclipse.core.runtime</artifactId>
+			<version>3.7.0.v20110110</version>
+			<scope>compile</scope>
+		</dependency>
+	 	<dependency>
+			<groupId>eclipse</groupId>
+			<artifactId>org.eclipse.equinox.common</artifactId>
+			<version>3.6.0.v20110523</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>eclipse</groupId>
+			<artifactId>org.eclipse.equinox.preferences</artifactId>
+			<version>3.4.1.R37x_v20110725</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>eclipse</groupId>
+			<artifactId>org.eclipse.jdt.ui</artifactId>
+			<version>3.7.1.r371_v20110824-0800</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>eclipse</groupId>
+			<artifactId>org.eclipse.osgi</artifactId>
+			<version>3.7.1.R37x_v20110808-1106</version>
+			<scope>compile</scope>
+		</dependency> 
+		<dependency>
+			<groupId>eclipse</groupId>
+			<artifactId>org.eclipse.jdt.core</artifactId>
+			<version>3.7.1.v_B76_R37x</version>
+			<scope>compile</scope>
+		</dependency>
+		<!--  -->
+		 <dependency>
+			<groupId>fr.inria.sacha</groupId>
+			<artifactId>gitanalyzer</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency> 	
+	</dependencies>
+
+	<build>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>fully.qualified.MainClass</mainClass>
+						</manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<executions>
+
+
+					<execution>
+						<id>gt</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<groupId>fr.labri.gumtree</groupId>
+							<artifactId>core</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<packaging>jar</packaging>
+							<file>${project.basedir}/lib/gt.jar</file>
+							<createChecksum>true</createChecksum>
+							<generatePom>true</generatePom>
+						</configuration>
+					</execution>
+
+
+					<execution>
+						<id>gt-par-jdt</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<groupId>fr.labri.gumtree</groupId>
+							<artifactId>gen</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<packaging>jar</packaging>
+							<file>${project.basedir}/lib/genjdt.jar</file>
+							<createChecksum>true</createChecksum>
+							<generatePom>true</generatePom>
+						</configuration>
+					</execution>
+
+
+					<execution>
+						<id>org.eclipse.jdt</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<groupId>org.eclipse.jdt</groupId>
+							<artifactId>core</artifactId>
+							<version>3.7.1</version>
+							<packaging>jar</packaging>
+							<file>${project.basedir}/lib/org.eclipse.jdt.core-3.7.1.v_B76_R37x.jar</file>
+							<createChecksum>true</createChecksum>
+							<generatePom>true</generatePom>
+						</configuration>
+					</execution>
+
+
+
+				</executions>
+
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
