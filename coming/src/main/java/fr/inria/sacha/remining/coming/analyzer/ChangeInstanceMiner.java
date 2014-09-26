@@ -58,10 +58,12 @@ public class ChangeInstanceMiner {
 			ActionType operationType, String keywordsMessageHeuristic) {
 		return analize(repositoryPath, "HEAD", typeLabel, operationType,  keywordsMessageHeuristic);
 	}
+
 	public Map<FileCommit, List> analize(String repositoryPath,  String typeLabel,
 			ActionType operationType) {
 		return analize(repositoryPath, "HEAD", typeLabel, operationType,"");
 	}
+
 	@SuppressWarnings("rawtypes")
 	public Map<FileCommit, List> analize(String repositoryPath, String masterBranch, String typeLabel,
 			ActionType operationType, String keywordsMessageHeuristic) {
@@ -73,7 +75,8 @@ public class ChangeInstanceMiner {
 		IFilter filter; 
 		if(keywordsMessageHeuristic == null || keywordsMessageHeuristic.isEmpty()){
 			filter = new DummyFilter();
-		}else{
+		}
+		else {
 			filter = new KeyWordsMessageFilter(keywordsMessageHeuristic);
 		}
 
@@ -93,6 +96,7 @@ public class ChangeInstanceMiner {
 					allInstances.putAll(resultCommit);
 			}
 		}
+
 		System.out.println("Result "+fineGrainAnalyzer.withPattern + " "+fineGrainAnalyzer.withoutPattern+" "+fineGrainAnalyzer.withError);
 		System.out.println("\n commits analyzed "+i);
 		return allInstances;
@@ -105,7 +109,6 @@ public class ChangeInstanceMiner {
 
 		FineGrainChangeCommitAnalyzer analyzer = new FineGrainChangeCommitAnalyzer(typeLabel,operationType);
 		
-
 		IFilter filter = new DummyFilter();
 
 		// For each commit of a repository
@@ -116,6 +119,7 @@ public class ChangeInstanceMiner {
 			Map<FileCommit, List> resultCommit = (Map) analyzer.analyze(lastCommit);
 			return resultCommit;
 		}
+
 		return null;
 	}
 
@@ -136,7 +140,6 @@ public class ChangeInstanceMiner {
 			log.info("Commit " + fc.getCommit().getName()+", "+fc.getCommit().getFullMessage().replace('\n', ' ') + ", file " + fc.getFileName() + " , instances  "
 					+ actionsfc.size());
 		}
-
 	}
 	
 	/**
@@ -157,24 +160,21 @@ public class ChangeInstanceMiner {
 			log.info("Commit " + fc.getCommit().getName()+", "+fc.getCommit().getFullMessage().replace('\n', ' ') + ", file " + fc.getFileName() + " , instances  "
 					+ actionsfc.size());
 			System.out.println("file: "+fc.getFileName());
+
 			for (Action action : actionsfc) {
 				//--
-				if(action instanceof Update){
+				if(action instanceof Update) {
 					Update up = (Update) action;
 					//System.out.println(up);
 					System.out.println(up.getNode().getLabel() );
 					System.out.println(up.getValue() );
 					System.out.println("-");
-				}else{
+				}
+				else {
 					System.err.println("error");
 				}
-				
 			}
 			System.out.println("---");
 		}
-
 	}
-	
-		
-
 }
