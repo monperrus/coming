@@ -18,13 +18,13 @@
 		</developer>
 	</developers>
 
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
-
+	<!-- Dependencies beginning -->
 	<dependencies>
+
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -45,66 +45,72 @@
 			</exclusions>
 		</dependency>
 
-
 		<dependency>
 			<groupId>fr.labri.gumtree</groupId>
 			<artifactId>core</artifactId>
-			<version>1.0-SNAPSHOT</version>
-			<scope>compile</scope>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>system</scope> <!-- compile -->
+			<systemPath>${basedir}/lib/gt.jar</systemPath>
 		</dependency>
 
 		<dependency>
 			<groupId>fr.labri.gumtree</groupId>
 			<artifactId>gen</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-			<scope>compile</scope>
+			<scope>system</scope> <!-- compile -->
+			<systemPath>${basedir}/lib/genjdt.jar</systemPath>
 		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.4</version>
-			<scope>test</scope>
+			<version>4.11</version>
+			<scope></scope>
 		</dependency>
 
-
- <!-- Dep For the parser -->
+ 		<!-- Dependencies for the JDT parser (mapping proccess)  -->
  		 <dependency>
-	<groupId>org.eclipse.core</groupId> <!-- eclipse -->
-	<artifactId>org.eclipse.core.contenttype</artifactId>
-	<version>3.4.100</version>
+			<groupId>org.eclipse.core</groupId> <!-- eclipse -->
+			<artifactId>org.eclipse.core.contenttype</artifactId>
+			<version>3.4.100</version>
 			<scope>compile</scope>
 		</dependency>
+
 		<dependency>
-	<groupId>org.eclipse.core</groupId>
-	<artifactId>org.eclipse.core.jobs</artifactId>
-	<version>3.5.100</version>
+			<groupId>org.eclipse.core</groupId>
+			<artifactId>org.eclipse.core.jobs</artifactId>
+			<version>3.5.100</version>
 			<scope>compile</scope>
 		</dependency>
+
 		<dependency>
-	<groupId>org.eclipse.core</groupId>
-	<artifactId>org.eclipse.core.resources</artifactId>
-	<version>3.7.100</version>
+			<groupId>org.eclipse.core</groupId>
+			<artifactId>org.eclipse.core.resources</artifactId>
+			<version>3.7.100</version>
 			<scope>compile</scope>
 		</dependency>
+
 		<dependency>
-	<groupId>org.eclipse.core</groupId>
-	<artifactId>org.eclipse.core.runtime</artifactId>
-	<version>3.7.0</version>
+			<groupId>org.eclipse.core</groupId>
+			<artifactId>org.eclipse.core.runtime</artifactId>
+			<version>3.7.0</version>
 			<scope>compile</scope>
 		</dependency>
+
 		<dependency>
-	<groupId>org.eclipse.equinox</groupId>
-	<artifactId>org.eclipse.equinox.common</artifactId>
-	<version>3.6.0.v20100503</version>
+			<groupId>org.eclipse.equinox</groupId>
+			<artifactId>org.eclipse.equinox.common</artifactId>
+			<version>3.6.0.v20100503</version>
 			<scope>compile</scope>
 		</dependency>
+
 		<dependency>
-	<groupId>org.eclipse.equinox</groupId>
-	<artifactId>org.eclipse.equinox.preferences</artifactId>
-	<version>3.4.1</version>
+			<groupId>org.eclipse.equinox</groupId>
+			<artifactId>org.eclipse.equinox.preferences</artifactId>
+			<version>3.4.1</version>
 			<scope>compile</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>eclipse</groupId>
 			<artifactId>org.eclipse.jdt.ui</artifactId>
@@ -112,30 +118,34 @@
 			<scope>system</scope> <!-- compile -->
 			<systemPath>${basedir}/lib/org.eclipse.jdt.ui_3.8.1.v20120814-144251.jar</systemPath>
 		</dependency>
+
 		<dependency>
-	<groupId>org.eclipse.osgi</groupId>
-	<artifactId>org.eclipse.osgi</artifactId>
-	<version>3.7.1</version>
+			<groupId>org.eclipse.osgi</groupId>
+			<artifactId>org.eclipse.osgi</artifactId>
+			<version>3.7.1</version>
 			<scope>compile</scope>
 		</dependency>
+
 		<dependency>
-	<groupId>org.eclipse.jdt</groupId>
-	<artifactId>org.eclipse.jdt.core</artifactId>
-	<version>3.7.1</version>
+			<groupId>org.eclipse.jdt</groupId>
+			<artifactId>org.eclipse.jdt.core</artifactId>
+			<version>3.7.1</version>
 			<scope>compile</scope>
 		</dependency>
-		<!--  -->
+
+		<!-- GITANALYZER -->
 		 <dependency>
 			<groupId>fr.inria.sacha</groupId>
 			<artifactId>gitanalyzer</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
+
 	</dependencies>
 
 	<build>
-
 		<plugins>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -169,13 +179,10 @@
 				</executions>
 			</plugin>
 
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-install-plugin</artifactId>
 				<executions>
-
-
 					<execution>
 						<id>gt</id>
 						<phase>clean</phase>
@@ -192,7 +199,6 @@
 							<generatePom>true</generatePom>
 						</configuration>
 					</execution>
-
 
 					<execution>
 						<id>gt-par-jdt</id>
@@ -211,7 +217,6 @@
 						</configuration>
 					</execution>
 
-
 					<execution>
 						<id>org.eclipse.jdt</id>
 						<phase>clean</phase>
@@ -228,13 +233,9 @@
 							<generatePom>true</generatePom>
 						</configuration>
 					</execution>
-
-
-
 				</executions>
-
 			</plugin>
+
 		</plugins>
 	</build>
-
 </project>
