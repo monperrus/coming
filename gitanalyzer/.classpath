@@ -27,5 +27,9 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/home/jimipepper/workspace/coming/gitanalyzer/lib/gitective-core-0.9.10.jar"/>
+	<classpathentry kind="lib" path="/home/jimipepper/workspace/coming/gitanalyzer/lib/org.eclipse.jgit-2.2.0.201212191850-r.jar"/>
+	<classpathentry kind="lib" path="/home/jimipepper/workspace/coming/gitanalyzer/lib/org.eclipse.text_3.5.200.dist.jar"/>
+	<classpathentry kind="lib" path="/home/jimipepper/workspace/coming/gitanalyzer/lib/seed2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -159,8 +159,7 @@ public enum EntityType {
     /**
      * Returns whether the given entity type is a type of a type declaration or not.
      * 
-     * @param type
-     *            to analyze
+     * @param type to analyze
      * @return <code>true</code> if given entity type is a type, <code>false</code> otherwise.
      */
     public static boolean isType(EntityType type) {

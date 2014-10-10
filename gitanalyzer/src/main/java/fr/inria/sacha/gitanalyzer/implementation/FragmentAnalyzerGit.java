@@ -27,10 +27,8 @@ public class FragmentAnalyzerGit implements FragmentAnalyzer {
 		// Retrieve a list of file affected by the commit
 		List<FileCommit> javaFiles = c.getJavaFileCommits();
 		
-		for (FileCommit fileCommit : javaFiles) {
-				newFragments.addAll(getNewFragments(fileCommit));
-			
-		}
+		for (FileCommit fileCommit : javaFiles)
+			newFragments.addAll(getNewFragments(fileCommit));
 
 		return newFragments;
 	}
@@ -38,7 +36,6 @@ public class FragmentAnalyzerGit implements FragmentAnalyzer {
 	@Override
 	public Object analyze(Commit commit) {
 	  throw new RuntimeException();
-
 	}
 
 	@Override
@@ -52,6 +49,7 @@ public class FragmentAnalyzerGit implements FragmentAnalyzer {
 			newFragments.addAll(comparator.getAfterDifferences(fPreviousVersion,
 				fNextVersion));
 		};
-	return newFragments;
+
+		return newFragments;
 	}
 }

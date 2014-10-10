@@ -21,56 +21,55 @@
             <name>Maxence G. de Montauzan</name>
             <email>Maxence Montauzan@inria.fr</email>
         </developer>
-        
+
         <developer>
             <id>Sylvain2012</id>
             <name> Sylvain Magnie</name>
             <email>Sylvain Magnie@inria.fr</email>
         </developer>
-       
-       
+
+
    </developers>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
-	<dependencies>
-
-
+<dependencies>
  	  <dependency>
-			<groupId>fr.inria.sacha</groupId>
-			<artifactId>seed2</artifactId>
-			<version>0.1</version>
-			<scope>compile</scope>
-	</dependency>    
-	
-<!-- 	<dependency>
-	<groupId>org.eclipse</groupId>
-	<artifactId>compare</artifactId>
-	<version>3.2.1-M20060711</version> 
-</dependency>-->
-
-<dependency>
-			<groupId>eclipse</groupId>
-			<artifactId>org.eclipse.equinox.common</artifactId>
-			<version>3.6.0.v20110523</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>eclipse</groupId>
-			<artifactId>org.eclipse.equinox.preferences</artifactId>
-			<version>3.4.1.R37x_v20110725</version>
-			<scope>compile</scope>
-		</dependency>
+		<groupId>fr.inria.sacha</groupId>
+		<artifactId>seed2</artifactId>
+		<version>0.1</version>
+		<scope>compile</scope>
+	</dependency>
 
 <!-- <dependency>
-	<groupId>eclipse</groupId>
-	<artifactId>org.eclipse.equinox.app</artifactId>
-	<version>1.0.0</version>
-</dependency> -->
+		<groupId>org.eclipse</groupId>
+		<artifactId>compare</artifactId>
+		<version>3.2.1-M20060711</version>
+	</dependency>-->
 
-<!--  -->
+	<dependency>
+	<groupId>org.eclipse.equinox</groupId>
+	<artifactId>common</artifactId>
+	<version>3.6.200-v20130402-1505</version>
+	<scope>compile</scope>
+</dependency>
+
+
+	<dependency>
+	<groupId>org.eclipse.equinox</groupId>
+	<artifactId>org.eclipse.equinox.preferences</artifactId>
+	<version>3.4.1</version>
+	<scope>compile</scope>
+</dependency>
+
+
+<!-- <dependency>
+		<groupId>eclipse</groupId>
+		<artifactId>org.eclipse.equinox.app</artifactId>
+		<version>1.0.0</version>
+	</dependency> -->
 
 	 <dependency>
 			<groupId>org.eclipse</groupId>
@@ -90,19 +89,17 @@
 			<version>0.9.10</version>
 		</dependency>
 
-
-
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+</dependencies>
 
 <build>
     <plugins>
-    
+
     <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -112,8 +109,8 @@
           <target>1.7</target>
         </configuration>
       </plugin>
-    
-    
+
+
 	<plugin>
 		<artifactId>maven-assembly-plugin</artifactId>
 		<configuration>
@@ -129,16 +126,16 @@
 		</configuration>
 		<executions>
 			<execution>
-				<id>make-assembly</id> 
-				<phase>package</phase> 
+				<id>make-assembly</id>
+				<phase>package</phase>
 				<goals>
 					<goal>single</goal>
 				</goals>
 			</execution>
 		</executions>
 	</plugin>
-	
-		
+
+
  	 <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-install-plugin</artifactId>
@@ -159,8 +156,8 @@
                             <generatePom>true</generatePom>
                         </configuration>
                 </execution>
-              
-           
+
+
                   <execution>
                         <id>org.eclipse.text</id>
                         <phase>clean</phase>
@@ -177,8 +174,8 @@
                             <generatePom>true</generatePom>
                         </configuration>
                 </execution>
-               
-                      
+
+
                   <execution>
                         <id>org.eclipse.jgit</id>
                         <phase>clean</phase>
@@ -195,8 +192,8 @@
                             <generatePom>true</generatePom>
                         </configuration>
                 </execution>
-               
-         		
+
+
 		 <execution>
                         <id>ogitective.core</id>
                         <phase>clean</phase>
@@ -213,13 +210,13 @@
                             <generatePom>true</generatePom>
                         </configuration>
                 </execution>
-               
-		
-               
+
+
+
             </executions>
-        </plugin> 
-	
-	
+        </plugin>
+
+
     </plugins>
 </build>
 </project>

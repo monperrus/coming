@@ -37,8 +37,6 @@ public class CommitGit implements Commit {
 	public CommitGit(RepositoryP repository, RevCommit revCmt) {
 		this.repo = repository;
 		this.revCommit = revCmt;
-	
-
 	}
 	
 	@Override

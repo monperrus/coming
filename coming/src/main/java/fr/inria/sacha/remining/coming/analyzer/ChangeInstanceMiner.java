@@ -36,32 +36,34 @@ public class ChangeInstanceMiner {
 	public static void main(String[] args) throws Exception {
 
 		String repositoryPath, masterBranch, label, optype;
+
 		repositoryPath = args[PARAM_GIT_PATH];
-		masterBranch = "master";
-		if (args.length > 1)
-			masterBranch = args[PARAM_MASTER_BRANCH];
-		ChangeInstanceMiner c = new ChangeInstanceMiner();
 		optype = args[PARAM_OP_TYPE];
 		label = args[PARAM_LABEL];
+		
+		if (args.length > 1)
+			masterBranch = args[PARAM_MASTER_BRANCH];
+		else
+			masterBranch = "master";
 
+		ChangeInstanceMiner c = new ChangeInstanceMiner();
 		c.analize(repositoryPath, masterBranch, label, ActionType.valueOf(optype), false);
-
 	}
 
 	public Map<FileCommit, List> analize(String repositoryPath, String masterBranch, String typeLabel,
 			ActionType operationType, boolean onlyRoot) {
 		
-		return analize(repositoryPath, masterBranch, typeLabel, operationType,null);
+		return analize(repositoryPath, masterBranch, typeLabel, operationType, null);
 	}	
 	
-	public Map<FileCommit, List> analize(String repositoryPath,  String typeLabel,
+	public Map<FileCommit, List> analize(String repositoryPath, String typeLabel,
 			ActionType operationType, String keywordsMessageHeuristic) {
 		return analize(repositoryPath, "HEAD", typeLabel, operationType,  keywordsMessageHeuristic);
 	}
 
-	public Map<FileCommit, List> analize(String repositoryPath,  String typeLabel,
+	public Map<FileCommit, List> analize(String repositoryPath, String typeLabel,
 			ActionType operationType) {
-		return analize(repositoryPath, "HEAD", typeLabel, operationType,"");
+		return analize(repositoryPath, "HEAD", typeLabel, operationType, "");
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -71,7 +73,6 @@ public class ChangeInstanceMiner {
 
 		FineGrainChangeCommitAnalyzer fineGrainAnalyzer = new FineGrainChangeCommitAnalyzer(typeLabel,operationType );
 		
-
 		IFilter filter; 
 		if(keywordsMessageHeuristic == null || keywordsMessageHeuristic.isEmpty()){
 			filter = new DummyFilter();
@@ -97,8 +98,8 @@ public class ChangeInstanceMiner {
 			}
 		}
 
-		System.out.println("Result "+fineGrainAnalyzer.withPattern + " "+fineGrainAnalyzer.withoutPattern+" "+fineGrainAnalyzer.withError);
-		System.out.println("\n commits analyzed "+i);
+		System.out.println("Result "+ fineGrainAnalyzer.withPattern + " "+ fineGrainAnalyzer.withoutPattern +" "+ fineGrainAnalyzer.withError);
+		System.out.println("\n commits analyzed "+ i);
 		return allInstances;
 	}
 
@@ -174,6 +175,7 @@ public class ChangeInstanceMiner {
 					System.err.println("error");
 				}
 			}
+
 			System.out.println("---");
 		}
 	}

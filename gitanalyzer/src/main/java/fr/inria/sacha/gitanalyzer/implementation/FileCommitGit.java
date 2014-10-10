@@ -24,7 +24,7 @@ public class FileCommitGit implements FileCommit {
 	}
 	
 	public FileCommitGit(String previousFileName, String previousVersion, String nextFileName, String nextVersion,
-			Commit commit,String previousCommitName) {
+			Commit commit, String previousCommitName) {
 		this.commit = commit;
 		this.previousVersion = previousVersion;
 		this.nextVersion = nextVersion;
@@ -32,7 +32,6 @@ public class FileCommitGit implements FileCommit {
 		this.nextFileName = nextFileName;
 		this.previousCommitName = previousCommitName;
 	}
-	
 
 	@Override
 	public Commit getCommit() {
@@ -65,12 +64,12 @@ public class FileCommitGit implements FileCommit {
 		return this.previousVersion;
 	}
 
-  @Override
-  public String getCompletePath() {
-    return this.getNextFileName();
-  }
+	@Override
+	public String getCompletePath() {
+		return this.getNextFileName();
+	}
 
-public String getPreviousCommitName() {
-	return previousCommitName;
-}
+	public String getPreviousCommitName() {
+		return previousCommitName;
+	}
 }

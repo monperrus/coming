@@ -18,21 +18,21 @@ public class Main {
 	public static void main(String[] args) {
 	
 		String message = "USAGE --parameters-- [projectLocation] [entity] [action] [message (optional)] ; to get the entities use -e, to get the actions use -a";
+		
 		if(args == null ){
 				System.out.println(message);
 				return;
 		}
+
 		if(args.length == 1)
 			if(args[0].equals("-e"))
-				System.out.println("ENTITIES: "+Arrays.toString(EntityType.values()));
+				System.out.println("ENTITIES: "+ Arrays.toString(EntityType.values()));
 			else
 				if(args[0].equals("-a"))
-					System.out.println("ACTIONS: "+Arrays.toString(ActionType.values()));
+					System.out.println("ACTIONS: "+ Arrays.toString(ActionType.values()));
 			
-		
 		if(args.length < 3)
 			return ;
-		
 			
 	    ChangeInstanceMiner c = new ChangeInstanceMiner();
 	    String projectLocation = args[0];
@@ -46,5 +46,4 @@ public class Main {
 	    c.printResultDetails(instancesFound);
 	    XMLOutput.print(instancesFound);
 	}
-
 }

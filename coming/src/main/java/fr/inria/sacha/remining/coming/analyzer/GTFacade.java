@@ -195,7 +195,7 @@ public class GTFacade {
 
 		List<Action> rootActions = new ArrayList<Action>();
 
-/*		for (Tree t : dstUpdTrees) {
+		/*for (Tree t : dstUpdTrees) {
 			// inc("UPD " + t.getTypeLabel() + " IN " +
 			// t.getParent().getTypeLabel(), summary);
 			Action a = originalActionsDst.get(t);
@@ -209,6 +209,7 @@ public class GTFacade {
 			Action a = originalActionsSrc.get(t);
 			rootActions.add(a);
 		}
+
 		for (Tree t : srcDelTrees) {
 			if (!srcDelTrees.contains(t.getParent())) {
 				Action a = originalActionsSrc.get(t);
@@ -216,19 +217,22 @@ public class GTFacade {
 
 			}
 		}
+
 		for (Tree t : dstAddTrees) {
 			if (!dstAddTrees.contains(t.getParent())) {
 				Action a = originalActionsDst.get(t);
 				rootActions.add(a);
 			}
 		}
+
 		//Due to the change in getRootActions
-	/*	for (Tree t : srcMvTrees) {
+		/*for (Tree t : srcMvTrees) {
 			if (!srcMvTrees.contains(t.getParent())) {
 				Action a = originalActionsSrc.get(t);
 				rootActions.add(a);
 			}
 		}*/
+
 		for (Tree t : dstMvTrees) {
 			if (!dstMvTrees.contains(t.getParent())) {
 				Action a = originalActionsDst.get(t);
@@ -239,9 +243,6 @@ public class GTFacade {
 		return rootActions;
 	}
 
-
-	
-	
 	private void clean() {
 		srcUpdTrees.clear();
 
