@@ -49,16 +49,14 @@
 			<groupId>fr.labri.gumtree</groupId>
 			<artifactId>core</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-			<scope>compile</scope> <!-- compile -->
-			<!-- <systemPath>${basedir}/lib/gt.jar</systemPath> -->
+			<scope>compile</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>fr.labri.gumtree</groupId>
 			<artifactId>gen</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-			<scope>compile</scope> <!-- compile -->
-			<!-- <systemPath>${basedir}/lib/genjdt.jar</systemPath> -->
+			<scope>compile</scope>
 		</dependency>
 
 		<dependency>
@@ -70,7 +68,7 @@
 
  		<!-- Dependencies for the JDT parser (mapping proccess)  -->
  		 <dependency>
-			<groupId>org.eclipse.core</groupId> <!-- eclipse -->
+			<groupId>org.eclipse.core</groupId>
 			<artifactId>org.eclipse.core.contenttype</artifactId>
 			<version>3.4.100</version>
 			<scope>compile</scope>
@@ -115,8 +113,7 @@
 			<groupId>eclipse</groupId>
 			<artifactId>org.eclipse.jdt.ui</artifactId>
 			<version>3.8.1.v20120814-144251</version>
-			<scope>system</scope> <!-- compile -->
-			<systemPath>${basedir}/lib/org.eclipse.jdt.ui_3.8.1.v20120814-144251.jar</systemPath>
+			<scope>compile</scope>
 		</dependency>
 
 		<dependency>
@@ -218,17 +215,16 @@
 					</execution>
 
 					<execution>
-						<id>org.eclipse.jdt</id>
+						<id>eclipse-jdt-ui</id>
 						<phase>clean</phase>
 						<goals>
 							<goal>install-file</goal>
 						</goals>
 						<configuration>
-							<groupId>org.eclipse.jdt</groupId>
-							<artifactId>core</artifactId>
-							<version>3.7.1</version>
+							<groupId>eclipse</groupId>
+							<version>3.8.1.v20120814-144251</version>
 							<packaging>jar</packaging>
-							<file>${project.basedir}/lib/org.eclipse.jdt.core-3.7.1.v_B76_R37x.jar</file>
+							<file>${project.basedir}/lib/org.eclipse.jdt.ui_3.8.1.v20120814-144251.jar</file>
 							<createChecksum>true</createChecksum>
 							<generatePom>true</generatePom>
 						</configuration>
