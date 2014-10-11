@@ -49,16 +49,16 @@
 			<groupId>fr.labri.gumtree</groupId>
 			<artifactId>core</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-			<scope>system</scope> <!-- compile -->
-			<systemPath>${basedir}/lib/gt.jar</systemPath>
+			<scope>compile</scope> <!-- compile -->
+			<!-- <systemPath>${basedir}/lib/gt.jar</systemPath> -->
 		</dependency>
 
 		<dependency>
 			<groupId>fr.labri.gumtree</groupId>
 			<artifactId>gen</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-			<scope>system</scope> <!-- compile -->
-			<systemPath>${basedir}/lib/genjdt.jar</systemPath>
+			<scope>compile</scope> <!-- compile -->
+			<!-- <systemPath>${basedir}/lib/genjdt.jar</systemPath> -->
 		</dependency>
 
 		<dependency>
@@ -161,7 +161,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>fully.qualified.MainClass</mainClass>
+							<mainClass>fr.inria.sacha.remining.coming.analyzer.Main</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
