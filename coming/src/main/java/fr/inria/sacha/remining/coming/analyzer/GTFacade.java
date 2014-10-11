@@ -34,9 +34,13 @@ import fr.labri.gumtree.matchers.Matcher;
 /**
  * Fine granularity comparison between two files according to a given granularity. GT
  * Matching algorithm
- * 
+ *
  * @author Matias Martinez, matias.martinez@inria.fr
- * 
+ *
+ */
+
+/**
+ * GT -> GumTree
  */
 public class GTFacade {
 
@@ -65,22 +69,22 @@ public class GTFacade {
 			tr = gen.generate(fjavar.getAbsolutePath());
 
 			// Matcher matcher = new ChangeDistillerMatcher(tl, tr);
-			actions = getActions(tl,tr,onlyRoot);
+			actions = getActions(tl,tr,onlyRoot); // DIFF
 			return actions;
 		} catch (Throwable e) {
 			e.printStackTrace();
 			return null;
 		}
-		
+
 	}
 
 	public List<Action> getActions(Tree tl, Tree tr, boolean onlyRoot) {
 		List<Action> actions;
 		Matcher matcher = new GumTreeMatcher(tl, tr);
-		mappings = matcher.getMappings();
+		mappings = matcher.getMappings(); // faire la compaison
 
-		GenerateActions gt = new GenerateActions(tl, tr, matcher.getMappings());
-		actions = gt.getActions();
+		GenerateActions gt = new GenerateActions(tl, tr, matcher.getMappings()); // mapping
+		actions = gt.getActions(); //
 
 		if (onlyRoot) {
 			actions = getRootActions(matcher.getMappings(), actions);
@@ -104,7 +108,7 @@ public class GTFacade {
 		return analyzeFiles(fileL, fileR, granularity,onlyroots);
 
 	};
-	
+
 	public File createTempFile(String name, String content) throws IOException {
 
 		File temp = File.createTempFile(name, ".tmp");
@@ -151,7 +155,7 @@ public class GTFacade {
 
 	/**
 	 * @return
-	 * 
+	 *
 	 */
 	public List<Action> getRootActions(Set<Mapping> rawMappings, List<Action> actions) {
 		clean();
@@ -178,7 +182,7 @@ public class GTFacade {
 				srcMvTrees.add(a.getNode());
 				Tree dest = mappings.getDst(a.getNode());
 				dstMvTrees.add(dest);
-				//Bugfix? 
+				//Bugfix?
 				//originalActionsDst.put(a.getNode(), a);
 				originalActionsDst.put(dest, a);
 			}
@@ -188,7 +192,7 @@ public class GTFacade {
 
 	/**
 	 * This method retrieves ONLY the ROOT actions
-	 * 
+	 *
 	 * @return
 	 */
 	private List<Action> retrieveRootActionsFromTreeNodes() {
@@ -201,7 +205,7 @@ public class GTFacade {
 			Action a = originalActionsDst.get(t);
 			rootActions.add(a);
 		}*/
-		
+
 		//New: iterates source instead of dest
 		for (Tree t : srcUpdTrees) {
 			// inc("UPD " + t.getTypeLabel() + " IN " +

@@ -17,12 +17,11 @@ import fr.inria.sacha.remining.coming.entity.ActionType;
 import fr.labri.gumtree.actions.Action;
 import fr.labri.gumtree.actions.Update;
 
-
 /**
- * 
+ *
  * @author Matias Martinez, matias.martinez@inria.fr
  * ex: ChangeInstancesSearch
- * 
+ *
  */
 public class ChangeInstanceMiner {
 
@@ -34,13 +33,12 @@ public class ChangeInstanceMiner {
 	public static int PARAM_OP_TYPE = 3;
 
 	public static void main(String[] args) throws Exception {
-
 		String repositoryPath, masterBranch, label, optype;
 
 		repositoryPath = args[PARAM_GIT_PATH];
 		optype = args[PARAM_OP_TYPE];
 		label = args[PARAM_LABEL];
-		
+
 		if (args.length > 1)
 			masterBranch = args[PARAM_MASTER_BRANCH];
 		else
@@ -52,34 +50,34 @@ public class ChangeInstanceMiner {
 
 	public Map<FileCommit, List> analize(String repositoryPath, String masterBranch, String typeLabel,
 			ActionType operationType, boolean onlyRoot) {
-		
+
 		return analize(repositoryPath, masterBranch, typeLabel, operationType, null);
-	}	
-	
+	}
+
 	public Map<FileCommit, List> analize(String repositoryPath, String typeLabel,
 			ActionType operationType, String keywordsMessageHeuristic) {
+
 		return analize(repositoryPath, "HEAD", typeLabel, operationType,  keywordsMessageHeuristic);
 	}
 
 	public Map<FileCommit, List> analize(String repositoryPath, String typeLabel,
 			ActionType operationType) {
+
 		return analize(repositoryPath, "HEAD", typeLabel, operationType, "");
 	}
 
 	@SuppressWarnings("rawtypes")
 	public Map<FileCommit, List> analize(String repositoryPath, String masterBranch, String typeLabel,
 			ActionType operationType, String keywordsMessageHeuristic) {
-		RepositoryP repo = new RepositoryPGit(repositoryPath, masterBranch);
 
+		RepositoryP repo = new RepositoryPGit(repositoryPath, masterBranch);
 		FineGrainChangeCommitAnalyzer fineGrainAnalyzer = new FineGrainChangeCommitAnalyzer(typeLabel,operationType );
-		
-		IFilter filter; 
-		if(keywordsMessageHeuristic == null || keywordsMessageHeuristic.isEmpty()){
+
+		IFilter filter;
+		if(keywordsMessageHeuristic == null || keywordsMessageHeuristic.isEmpty())
 			filter = new DummyFilter();
-		}
-		else {
+		else
 			filter = new KeyWordsMessageFilter(keywordsMessageHeuristic);
-		}
 
 		// For each commit of a repository
 		List<Commit> history = repo.history();
@@ -87,15 +85,16 @@ public class ChangeInstanceMiner {
 
 		Map<FileCommit, List> allInstances = new HashMap<FileCommit, List>();
 		for (Commit c : history) {
-			i++;
 			// System.out.println((i++)+"/"+history.size());
 			if (filter.acceptCommit(c)) {
-							
+
 				Map<FileCommit, List> resultCommit = (Map) fineGrainAnalyzer.analyze(c);
 				// System.out.println(c);
 				if (resultCommit != null && !resultCommit.isEmpty())
 					allInstances.putAll(resultCommit);
 			}
+
+			i++;
 		}
 
 		System.out.println("Result "+ fineGrainAnalyzer.withPattern + " "+ fineGrainAnalyzer.withoutPattern +" "+ fineGrainAnalyzer.withError);
@@ -109,13 +108,14 @@ public class ChangeInstanceMiner {
 		RepositoryP repo = new RepositoryPGit(repositoryPath, masterBranch);
 
 		FineGrainChangeCommitAnalyzer analyzer = new FineGrainChangeCommitAnalyzer(typeLabel,operationType);
-		
+
 		IFilter filter = new DummyFilter();
 
 		// For each commit of a repository
 		List<Commit> history = repo.history();
-		Commit lastCommit = history.get(history.size() - 1);// the previous
+		Commit lastCommit = history.get(history.size() - 1); // the previous
 		log.info("Analyzing commit " + masterBranch);
+
 		if (filter.acceptCommit(lastCommit)) {
 			Map<FileCommit, List> resultCommit = (Map) analyzer.analyze(lastCommit);
 			return resultCommit;
@@ -125,11 +125,11 @@ public class ChangeInstanceMiner {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param result
 	 */
 	public void printResult(Map<FileCommit, List> result) {
-		
+
 		log.info("MAX_LINES_PER_HUNK: " + FineGrainChangeCommitAnalyzer.MAX_LINES_PER_HUNK);
 		log.info("MAX_HUNKS_PER_FILECOMMIT: " + FineGrainChangeCommitAnalyzer.MAX_HUNKS_PER_FILECOMMIT);
 		log.info("MAX_FILES_PER_COMMIT: " + FineGrainChangeCommitAnalyzer.MAX_FILES_PER_COMMIT);
@@ -142,13 +142,13 @@ public class ChangeInstanceMiner {
 					+ actionsfc.size());
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param result
 	 */
 	public void printResultDetails(Map<FileCommit, List> result) {
-		
+
 		log.info("MAX_LINES_PER_HUNK: " + FineGrainChangeCommitAnalyzer.MAX_LINES_PER_HUNK);
 		log.info("MAX_HUNKS_PER_FILECOMMIT: " + FineGrainChangeCommitAnalyzer.MAX_HUNKS_PER_FILECOMMIT);
 		log.info("MAX_FILES_PER_COMMIT: " + FineGrainChangeCommitAnalyzer.MAX_FILES_PER_COMMIT);

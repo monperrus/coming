@@ -16,7 +16,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.junit.Test;
+//import org.junit.Test;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -29,14 +29,14 @@ import fr.labri.gumtree.actions.Update;
 
 /**
  * Export the result to XML format
- * 
+ *
  * @author  Matias Martinez, matias.martinez@inria.fr
  *
  */
 public class XMLOutput {
 
-	
-	
+
+
 	public static void print(Map<FileCommit, List> result) {
 
 		try {
@@ -52,7 +52,7 @@ public class XMLOutput {
 			for (FileCommit fc : result.keySet()) {
 				List<Action> actionsfc = result.get(fc);
 
-				
+
 				Element commitfile = root.createElement("commitFile");
 				rootElement.appendChild(commitfile);
 
@@ -90,7 +90,7 @@ public class XMLOutput {
 						Element pattern = root.createElement("pattern");
 						ae.appendChild(pattern);
 						pattern.setTextContent("-");
-						
+
 						Element order = root.createElement("order");
 						ae.appendChild(order);
 						order.setTextContent("-");
@@ -123,54 +123,54 @@ public class XMLOutput {
 		}
 	}
 
-	
+
 	public void results(String path) throws Exception{
-		
+
 		Map<String, Integer> result = new HashMap<String, Integer>();
-		
-		
+
+
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document doc = dBuilder.parse(path);
-		
+
 		doc.getDocumentElement().normalize();
-		 
+
 		System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-	 
+
 		NodeList nList = doc.getElementsByTagName("commitFile");
-	 
+
 		System.out.println("----------------------------");
-	 
+
 		for (int temp = 0; temp < nList.getLength(); temp++) {
-			
+
 			Node nNode = nList.item(temp);
-			 
+
 			//System.out.println("\nCurrent Element :" + nNode.getNodeName()+" "+temp);
-	 
+
 			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-	 
+
 				Element eElement = (Element) nNode;
-	 			
+
 				NodeList atrs = eElement.getElementsByTagName("actions");
-				
+
 				NodeList atr = ((Element) atrs.item(0)).getElementsByTagName("action");
-				
+
 				//For each action
 				for (int temp1 = 0; temp1 < atr.getLength(); temp1++) {
-				
+
 						Node atti = atr.item(temp1);
-						//System.out.println("attr"+atti );	
+						//System.out.println("attr"+atti );
 						//System.out.println("pattern : " + ((Element) atti).getElementsByTagName("pattern").item(0).getTextContent());
 						NodeList pats =  ((Element) atti).getElementsByTagName("pattern");
-						
+
 						for(int pat = 0; pat < pats.getLength(); pat++){
 							Node pati = pats.item(pat);
 							String patContent = pati.getTextContent();
-							
+
 							putPatternValue(result, patContent);
 						}
 				}
-			
+
 			}
 		}
 		System.out.println(result);
@@ -178,61 +178,65 @@ public class XMLOutput {
 			System.out.println(key+"&"+result.get(key)+"\\\\");
 		}
 	}
-	
+
+	/*
 	@Test
 	public void resultsPatternHeuristic() throws Exception{
 		//this.resultsPattern("C:\\Personal\\inria\\sachaPublications\\2014-matias-git\\fixing2014\\data\\if-updates\\dataset-patterns-all-if.xml");
-		
+
 		//this.resultsPattern("C:\\Users\\adam\\Desktop\\math-if.xml");
 		this.resultsPattern("C:\\Users\\adam\\Desktop\\if-commons-4.xml");
-		
+
 	}
-	
+	*/
+
+	/*
 	@Test
 	public void resultsPatternSelection() throws Exception{
 		this.resultsPattern("C:\\Personal\\inria\\sachaPublications\\2014-matias-git\\fixing2014\\data\\if-updates\\dataset-selection-patterns-if.xml");
 	}
-	
+	*/
+
 	//@Test
 	public void resultsPattern(String path) throws Exception{
-		
+
 		Map<String, Integer> result = new HashMap<String, Integer>();
 		Map<String, List<String>> pcommits = new HashMap<String, List<String>>();
-		
-		
+
+
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document doc = dBuilder.parse(path);
 		//Document doc = dBuilder.parse("C:\\tmp\\outxml.xml");
-		
+
 		doc.getDocumentElement().normalize();
-		 
+
 		System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-	 
+
 		NodeList nList = doc.getElementsByTagName("commitFile");
-	 
+
 		System.out.println("----------------------------");
 		int commitWithOutPattern = 0;
 		int commitWithPattern = 0;
-		
+
 		for (int temp = 0; temp < nList.getLength(); temp++) {
-			
+
 			Node nNode = nList.item(temp);
 			String commit = nNode.getAttributes().getNamedItem("id").getNodeValue();
-			
-			 
+
+
 			//System.out.println("\nCurrent Element :" + nNode.getNodeName()+" "+temp);
-	 
+
 			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-	 
+
 				Element eElement = (Element) nNode;
-	 			
+
 				NodeList patternInstance = eElement.getElementsByTagName("patternInstances");
-				
-				
+
+
 				//For each action
 				for (int temp1 = 0; temp1 < patternInstance.getLength(); temp1++) {
-				
+
 						NodeList patternList = ((Element) patternInstance.item(0)).getElementsByTagName("pattern");
 						Node pattern = patternList.item(0);
 						if(pattern == null){
@@ -242,35 +246,35 @@ public class XMLOutput {
 							continue;
 						}
 						commitWithPattern++;
-					
+
 						String pname = pattern.getAttributes().getNamedItem("value").getNodeValue();
 						NodeList vals =  ((Element) pattern).getElementsByTagName("values");
-						
+
 						NodeList pats = ((Element) vals.item(0)).getElementsByTagName("value");
-						
+
 						putPatternCommits(pcommits,pname, commit);
-						
+
 						if(!pname.equals("UpBinary")){
 						//if(!pname.contains("Binary") && !pname.contains("Unary")){
 							putPatternValue(result, pname);
-							
+
 						}else
 						for(int pat = 0; pat < pats.getLength(); pat++){
-							
-							
+
+
 							Node value = pats.item(pat);
 							String patContent = "";
 							NodeList old = ((Element) value).getElementsByTagName("oldvalue");
 							String oldV =  old.item(0).getTextContent();
-						
+
 							NodeList curr = ((Element) value).getElementsByTagName("newvalue");
 							String currV =  curr.item(0).getTextContent();
 							patContent+=pname+(("".equals(oldV))?"":("-"+oldV))+(("".equals(currV))?"":("->"+currV));
 							putPatternValue(result, patContent);
-						
+
 						}
 				}
-			
+
 			}
 		}
 		for (String pattern : pcommits.keySet()) {
@@ -280,10 +284,10 @@ public class XMLOutput {
 				System.out.println("--"+c);
 			}
 		}
-		
+
 		//System.out.println(result);
-			
-		
+
+
 		List<String> l = new ArrayList(result.keySet());
 		ResultOrder ro = new ResultOrder();
 		ro.result = result;
@@ -297,13 +301,13 @@ public class XMLOutput {
 		System.out.println("total "+total);
 		System.out.println("Commits with patterns "+commitWithPattern);
 		System.out.println("Commits without patterns "+commitWithOutPattern);
-		
-		
-		
+
+
+
 	}
 
-	
-	
+
+
 
 	public void putPatternValue(Map<String, Integer> result, String patContent) {
 		if(!patContent.equals("-")){
@@ -324,10 +328,10 @@ public class XMLOutput {
 		}
 		oc.add(commit);
 	}
-	
+
 	public class ResultOrder implements Comparator<String> {
 		public Map<String, Integer> result = null;
-		
+
 		@Override
 		public int compare(String o1, String o2) {
 			int r1 = result.get(o1);

@@ -31,14 +31,13 @@ import fr.labri.gumtree.actions.Update;
 
 /**
  * Commit analyzer: It searches fine grain changes.
- * 
+ *
  * @author Matias Martinez, matias.martinez@inria.fr
- * 
+ *
  */
 public class FineGrainChangeCommitAnalyzer implements CommitAnalyzer {
 
-	Logger log = Logger
-			.getLogger(FineGrainChangeCommitAnalyzer.class.getName());
+	Logger log = Logger.getLogger(FineGrainChangeCommitAnalyzer.class.getName());
 
 	// PARAMETERS
 	public static int MAX_LINES_PER_HUNK;
@@ -60,21 +59,15 @@ public class FineGrainChangeCommitAnalyzer implements CommitAnalyzer {
 	 * can consider different taxonomies (JDT, CD)
 	 */
 	String typeLabel = null;
-
-	FragmentableComparator comparator = new LineComparator(); /*
-															 * JavaTokenComparator(
-															 * );//
-															 */
-
+	FragmentableComparator comparator = new LineComparator(); // new JavaTokenComparator();
 	public static GranuralityType granularity = GranuralityType.CD;
 
 	/**
-	 * 
+	 *
 	 * @param typeLabel node label to mine
 	 * @param operationType operation type to mine
 	 */
-	public FineGrainChangeCommitAnalyzer(String typeLabel,
-			ActionType operationType) {
+	public FineGrainChangeCommitAnalyzer(String typeLabel, ActionType operationType) {
 
 		this.typeLabel = typeLabel;
 
@@ -100,37 +93,35 @@ public class FineGrainChangeCommitAnalyzer implements CommitAnalyzer {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param previousVersion
 	 * @param nextVersion
 	 * @return
 	 */
-	protected List<RangeDifference> getNumberChanges(String previousVersion,
-			String nextVersion) {
+	protected List<RangeDifference> getNumberChanges(String previousVersion, String nextVersion) {
 		List<RangeDifference> ranges = new ArrayList<RangeDifference>();
-		Fragmentable fPreviousVersion = comparator
-				.createFragmentable(previousVersion);
+
+		Fragmentable fPreviousVersion = comparator.createFragmentable(previousVersion);
 		Fragmentable fNextVersion = comparator.createFragmentable(nextVersion);
-		RangeDifference[] results = comparator.compare(fPreviousVersion,
-				fNextVersion);
+		RangeDifference[] results = comparator.compare(fPreviousVersion, fNextVersion);
 
 		for (RangeDifference diff : results) {
 			if (diff.kind() != RangeDifference.NOCHANGE) {
 				int length = diff.rightEnd() - diff.rightStart();
-				if (length <= MAX_LINES_PER_HUNK) {
+				if (length <= MAX_LINES_PER_HUNK)
 					ranges.add(diff);
-				} else {
-					// log.info("Hunk discarted by large size");
-				}
-
+				/*
+				else
+					log.info("Hunk discarted by large size");
+				*/
 			}
 		}
+
 		return ranges;
 	}
 
 	/**
-	 * Analyze a commit finding instances of changes return a Map<FileCommit,
-	 * List>
+	 * Analyze a commit finding instances of changes return a Map<FileCommit, List>
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -139,12 +130,12 @@ public class FineGrainChangeCommitAnalyzer implements CommitAnalyzer {
 		// Retrieve a list of file affected by the commit
 		List<FileCommit> javaFiles = commit.getJavaFileCommits();
 		int countJava = 0;
+
 		for (FileCommit fileCommit : javaFiles) {
-			if (!fileCommit.getCompletePath().toLowerCase()
-					.endsWith("package-info.java")) {
+			if (!fileCommit.getCompletePath().toLowerCase().endsWith("package-info.java"))
 				countJava++;
-			}
 		}
+
 		if (countJava > MAX_FILES_PER_COMMIT) {
 			// System.out.println("Commit not accepted, many files in the commit");
 			// log.info("-----");
@@ -189,27 +180,29 @@ public class FineGrainChangeCommitAnalyzer implements CommitAnalyzer {
 			if (!left.trim().isEmpty()) {
 				GTFacade cdiff = new GTFacade();
 				List<Action> allActions;
+
 				try {
 					allActions = cdiff.analyzeContent(left, right, granularity);
+
 					if (allActions.size() > MAX_AST_CHANGES_PER_FILE) {
 						// log.info("File Commit not accepted, it has more changes that allowed");
 						continue;
 					}
+
 					if (allActions.size() < MIN_AST_CHANGES_PER_FILE) {
 						// log.info("File Commit not accepted, it has more changes that allowed");
 						continue;
 					}
 
 					if (allActions.size() > 0) {
-						List<Action> filterActions = filterActions(allActions,
-								typeLabel, operationType, granularity);
+						List<Action> filterActions = filterActions(allActions, typeLabel, operationType, granularity);
 						nChanges += filterActions.size();
-						if (filterActions.size() > 0) {
-							changeInstancesInCommit.put(fileCommit,
-									filterActions);
-						}
+
+						if (filterActions.size() > 0)
+							changeInstancesInCommit.put(fileCommit, filterActions);
 					}
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -224,15 +217,14 @@ public class FineGrainChangeCommitAnalyzer implements CommitAnalyzer {
 
 		if (nTests > 0 && nChanges > 0) {
 			int instances = 0;
-			for (List instancesOfCommit : changeInstancesInCommit.values()) {
+
+			for (List instancesOfCommit : changeInstancesInCommit.values())
 				instances += instancesOfCommit.size();
-			}
-			log.info("commit: " + commit.getName() + ", Tests " + nTests
-					+ ", Actions: " + instances);
+
+			log.info("commit: "+ commit.getName() +", Tests "+ nTests +", Actions: "+ instances);
 		}
 
 		return changeInstancesInCommit;
-
 	}
 
 	public int withPattern;
@@ -241,42 +233,38 @@ public class FineGrainChangeCommitAnalyzer implements CommitAnalyzer {
 
 	/**
 	 * Return the actions according to a type label.
-	 * 
+	 *
 	 * @param actions
 	 * @param typeLabel
 	 * @param operationType
 	 * @param granularity2
 	 * @return
 	 */
-	protected List<Action> filterActions(List<Action> actions,
-			String typeLabel, ActionType operationType,
-			GranuralityType granularity) {
-
+	protected List<Action> filterActions(List<Action> actions, String typeLabel, ActionType operationType, GranuralityType granularity) {
 		actions.removeAll(Collections.singleton(null));
-
 		List<Action> filter = new ArrayList<Action>();
+
 		for (Action action : actions) {
 			try {
 				if (action.getNode().getTypeLabel().equals("CompilationUnit"))
 					continue;
 
 				EntityType actionET = null;
-				if (granularity.equals(GranuralityType.CD)) {
-					actionET = EntityType.values()[action.getNode().getType()];// entityTypesKeys.get(action.getNode().getType());
-				} else {
+
+				if (granularity.equals(GranuralityType.CD))
+					actionET = EntityType.values()[action.getNode().getType()]; // entityTypesKeys.get(action.getNode().getType());
+				else
 					actionET = entityTypesKeys.get(action.getNode().getType());
-				}
+
 				if (actionET == null) {
 					// TODO:
 					// there are some AST element not mapped to ENTITY TYPES
 					// e.g. THEN_STATEMENT, THROW
 					// System.err.println("Null entity for action "+action);
-				} else if (actionET.name().equals(typeLabel)
-						&& matchTypes(action, operationType)) {
-
+				} else if (actionET.name().equals(typeLabel) && matchTypes(action, operationType))
 					filter.add(action);
-				}
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -291,11 +279,11 @@ public class FineGrainChangeCommitAnalyzer implements CommitAnalyzer {
 					for (Field astField : ASTNode.class.getFields()) {
 						if (field.getName().equals(astField.getName())) {
 							int type = astField.getInt(ASTNode.class);
-							entityTypesKeys.put(type,
-									EntityType.valueOf(field.getName()));
+							entityTypesKeys.put(type, EntityType.valueOf(field.getName()));
 						}
 					}
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
