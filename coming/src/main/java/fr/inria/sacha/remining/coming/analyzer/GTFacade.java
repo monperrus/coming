@@ -84,6 +84,7 @@ public class GTFacade {
 		mappings = matcher.getMappings(); // faire la compaison
 
 		GenerateActions gt = new GenerateActions(tl, tr, matcher.getMappings()); // mapping
+		
 		actions = gt.getActions(); //
 
 		if (onlyRoot) {

@@ -1,5 +1,6 @@
 package fr.inria.sacha.remining.coming.analyzer;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,7 +15,6 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import comparison.Fragmentable;
 import comparison.FragmentableComparator;
 import comparison.LineComparator;
-
 import fr.inria.sacha.gitanalyzer.interfaces.Commit;
 import fr.inria.sacha.gitanalyzer.interfaces.CommitAnalyzer;
 import fr.inria.sacha.gitanalyzer.interfaces.FileCommit;
@@ -22,12 +22,13 @@ import fr.inria.sacha.remining.coming.entity.ActionType;
 import fr.inria.sacha.remining.coming.entity.EntityType;
 import fr.inria.sacha.remining.coming.entity.GranuralityType;
 import fr.inria.sacha.remining.coming.util.ConfigurationProperties;
-import fr.labri.gumtree.Tree;
+import fr.labri.gumtree.ProduceFileTree;
 import fr.labri.gumtree.actions.Action;
 import fr.labri.gumtree.actions.Delete;
 import fr.labri.gumtree.actions.Insert;
 import fr.labri.gumtree.actions.Move;
 import fr.labri.gumtree.actions.Update;
+import fr.labri.gumtree.gen.jdt.ProduceJDTTree;
 
 /**
  * Commit analyzer: It searches fine grain changes.
@@ -147,9 +148,8 @@ public class FineGrainChangeCommitAnalyzer implements CommitAnalyzer {
 
 		// The result is divided by File from the commit.
 		Map<FileCommit, List> changeInstancesInCommit = new HashMap<FileCommit, List>();
-
+		
 		for (FileCommit fileCommit : javaFiles) {
-
 			if (fileCommit.getCompletePath().toLowerCase().contains("test")) {
 				nTests++;
 				continue;
