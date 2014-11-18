@@ -46,7 +46,7 @@ public enum EntityType {
     CATCH_CLAUSE(true),
     CATCH_CLAUSES(false),
     CHARACTER_LITERAL(true),
-    CLASS(false),
+    CLASS(true),
     CLASS_INSTANCE_CREATION(true),
     COMPILATION_UNIT(true),
     CONDITIONAL_EXPRESSION(true),
@@ -189,6 +189,7 @@ public enum EntityType {
             case ASSIGNMENT:
             case BREAK_STATEMENT:
             case CATCH_CLAUSE:
+            case CLASS:
             case CLASS_INSTANCE_CREATION:
             case CONSTRUCTOR_INVOCATION:
             case CONTINUE_STATEMENT:
