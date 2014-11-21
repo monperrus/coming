@@ -166,7 +166,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>fr.inria.sacha.reming.coming.dependencygraph.Main</mainClass>
+							<mainClass>fr.inria.sacha.remining.coming.dependencyanalyzer.Main</mainClass>
 							<!--<mainClass>fr.inria.sacha.remining.coming.analyzer.Main</mainClass>-->
 						</manifest>
 					</archive>
