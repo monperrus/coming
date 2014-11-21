@@ -29,13 +29,15 @@ public class XMLOutputResFile {
 	private Element currentCommitNode;
 		
 	private int numberResult;
+	private boolean hasGithubUrl;
 	
-	public XMLOutputResFile() {
+	public XMLOutputResFile(boolean hasGithubUrl) {
 		this.rootNode = new Element(ROOT_NODE_NAME);
 		this.rootXML = new Document(this.rootNode);
 		this.rootNodeCommitList = new Element(ROOT_NODE_COMMIT_LIST_NAME);
 		this.currentCommitNode = new Element(COMMIT_NODE_NAME);
 		this.numberResult = 0;
+		this.hasGithubUrl = hasGithubUrl;
 	}
 	
 	public void setNumberOfCommitInRepository(int numberOfCommit) {
@@ -49,12 +51,26 @@ public class XMLOutputResFile {
 	}
 	
 	public void addAnalyzedCommit(Commit commit) {
-		if(!this.currentCommitNode.getChildren().isEmpty()) {
+		if((this.hasGithubUrl && this.currentCommitNode.getChildren().size() > 1) || (!this.hasGithubUrl && this.currentCommitNode.getChildren().size() >= 1)) { 
+			// the commit node does not contain only a github-url node
 			this.rootNodeCommitList.addContent(this.currentCommitNode);
 		}
 		
 		this.currentCommitNode = new Element(COMMIT_NODE_NAME);
 		this.currentCommitNode.setAttribute("number", commit.getName());
+	}
+	
+	public void addURLGithubCommit(String githubRepoUrl ,String SHA1NumberCommit) {
+		String githubCommitUrl = githubRepoUrl;
+		
+		if(!githubCommitUrl.endsWith("/")) {
+			githubCommitUrl = githubCommitUrl.concat("/");
+		}
+		
+		githubCommitUrl = githubCommitUrl.concat("commit/");
+		githubCommitUrl = githubCommitUrl.concat(SHA1NumberCommit);
+		
+		this.currentCommitNode.addContent(new Element("github-url").setText(githubCommitUrl));
 	}
 	
 	public void addCommitFile(String fileName, ActionType action, Collection<String> dependencies) {
