@@ -6,29 +6,35 @@ import java.util.List;
 import fr.inria.sacha.gitanalyzer.interfaces.Commit;
 import fr.inria.sacha.gitanalyzer.interfaces.FileCommit;
 import fr.inria.sacha.gitanalyzer.object.RepositoryPGit;
-import fr.inria.sacha.remining.coming.dependencyanalyzer.util.XMLOutputResFile;
+import fr.inria.sacha.remining.coming.dependencyanalyzer.entity.Class;
+import fr.inria.sacha.remining.coming.dependencyanalyzer.entity.Class.ClassType;
+import fr.inria.sacha.remining.coming.dependencyanalyzer.spoonanalyzer.Analyzer;
+import fr.inria.sacha.remining.coming.dependencyanalyzer.util.io.ResourceFile;
+import fr.inria.sacha.remining.coming.dependencyanalyzer.util.io.XMLOutputResFile;
+import fr.inria.sacha.remining.coming.dependencyanalyzer.util.tool.DepTool;
 import fr.inria.sacha.remining.coming.entity.ActionType;
 
 /**
  * 
- * Launches a dependency classes analysis on a Git JAVA project
+ * Launches a dependency analysis for each class on a Git JAVA project
  * 
- * @author  Romain Philippon
+ * @author Romain Philippon
  *
  */
 public class Main {
-
-	// private final static EntityType ENTITY_TO_ANALYZE = EntityType.CLASS;
-	// private final static List<ActionType> GIT_ACTION_TO_ANALYZE = Arrays.asList(ActionType.INS, ActionType.DEL);
 	
-	public static void main(String[] args) {
-		
+	public static void main(String[] args) throws IOException {
 		String previousVersion, nextVersion;
 		String message = "USAGE --parameters-- projectLocation [remoteRepositoryGitHubUrl]";
 		XMLOutputResFile xml = null;
 		String githubRepoUrl = null;
 		boolean hasGithubUrl = false;
+		Analyzer dependencyAnalyzer = new Analyzer();
+		ResourceFile rFile = null;
+		Class classFound, classFoundBefore, classFoundAfter;
+		classFound = classFoundBefore = classFoundAfter = null;
 		
+		/* HANDLES COMMAND PARAMETERS */
 		if(args == null){
 				System.out.println(message);
 				return;
@@ -52,27 +58,82 @@ public class Main {
 	    
 	    xml.setGitRepositoryName(projectLocation);
 	    xml.setNumberOfCommitInRepository(allGitCommit.size());
-	    	
+	    
     	/* ANALYSIS COMMIT ONE BY ONE */
     	for(Commit commit : allGitCommit) {
     		List<FileCommit> javaCommitFiles = commit.getJavaFileCommits();
-    		xml.addAnalyzedCommit(commit);
     		
-    		if(githubRepoUrl != null)
-    			xml.addURLGithubCommit(githubRepoUrl, commit.getName());
-    		    		
     		for(FileCommit fileCommit : javaCommitFiles) {
-    			previousVersion = fileCommit.getPreviousVersion();
-    			nextVersion = fileCommit.getNextVersion();
-    			
-    			/* ADDED CLASSES */
-    			if(previousVersion.isEmpty()) {    				
-    				xml.addCommitFile(fileCommit.getFileName(), ActionType.INS, null);
-        		}
-    			else {
+    			if(!fileCommit.getFileName().equals(new String("package-info.java"))) // excludes package information files from analysis
+    			{
+	    			previousVersion = fileCommit.getPreviousVersion();
+	    			nextVersion = fileCommit.getNextVersion();
+	    			
+	    			/* ADDED CLASSES */
+	    			if(previousVersion.isEmpty()) {    				
+	    				rFile = new ResourceFile(fileCommit.getFileName(), nextVersion);
+	    				
+	    				try {
+	    					classFound = dependencyAnalyzer.analyze(rFile);
+	    					
+	    					if(!classFound.getDependencies().isEmpty()) {
+	    						if(githubRepoUrl != null)
+    								xml.addURLGithubCommit(githubRepoUrl, commit.getName());
+	    					
+	    						xml.addAnalyzedCommit(commit);
+	    		        		xml.addCommitDate(commit.getRevDate());
+	    		        		xml.addCommitFile(fileCommit.getFileName());
+	    						xml.addClass(classFound, ActionType.INS);
+	    					}
+						} 
+	    				catch (Exception e) {
+							System.err.println("Impossible to analyze "+ fileCommit.getFileName());
+						}
+	        		}
 	    			/* DELETED CLASSES */
-	    			if(nextVersion.isEmpty()) {
-	        			xml.addCommitFile(fileCommit.getFileName(), ActionType.DEL, null);
+	    			else if(nextVersion.isEmpty()) {
+    					rFile = new ResourceFile(fileCommit.getFileName(), previousVersion);
+
+	    				try {
+							classFound = dependencyAnalyzer.analyze(rFile);
+							
+							if(!classFound.getDependencies().isEmpty()) {
+								if(githubRepoUrl != null)
+    								xml.addURLGithubCommit(githubRepoUrl, commit.getName());
+							
+								xml.addAnalyzedCommit(commit);
+				        		xml.addCommitDate(commit.getRevDate());
+				        		xml.addCommitFile(fileCommit.getFileName());
+		    					xml.addClass(classFound, ActionType.DEL);
+							}
+	    				}
+	    				catch (Exception e) {
+							System.err.println("Impossible to analyze "+ fileCommit.getFileName());
+	    				}
+	    			}
+	    			/* UPDATED CLASSES */
+	    			else {
+	    				try {
+	    					// analysis for version before commit
+	    					rFile = new ResourceFile(fileCommit.getFileName(), previousVersion);
+							classFoundBefore = dependencyAnalyzer.analyze(rFile);
+	    					
+		    				// analysis for version after commit
+	    					rFile = new ResourceFile(fileCommit.getFileName(), previousVersion);
+							classFoundAfter = dependencyAnalyzer.analyze(rFile);
+							
+							// get correct dependency update
+							if(githubRepoUrl != null)
+								xml.addURLGithubCommit(githubRepoUrl, commit.getName());
+							
+							xml.addAnalyzedCommit(commit);
+			        		xml.addCommitDate(commit.getRevDate());
+			        		xml.addCommitFile(fileCommit.getFileName());
+	    					xml.addClass(new Class(classFoundBefore.getName(), ClassType.REGULAR, DepTool.diff(classFoundBefore.getDependencies(), classFoundAfter.getDependencies())), ActionType.UPD);
+	    				}
+	    				catch (Exception e) {
+							System.err.println("Impossible to analyze "+ fileCommit.getFileName());
+	    				}
 	    			}
     			}
     		}
