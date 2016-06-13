@@ -26,15 +26,17 @@ public class DepTool {
 		
 		/* COMPUTES THE SAME AND THE DELETED DEPENDENCIES */
 		for(Dependency dependency : before) {
+
 			if(after.contains(dependency)) { // dependencies which have not changed
-				try {
-					result.add(new SameDependency(dependency.getDependency()));
-				}
-				catch(NoSuchObjectException nsoe) {
-					result.add(new SameDependency(dependency.getQualifiedDependencyName()));
-				}
+//				try {
+//					result.add(new SameDependency(dependency.getDependency()));
+//				}
+//				catch(NoSuchObjectException nsoe) {
+//					result.add(new SameDependency(dependency.getQualifiedDependencyName()));
+//				}
 			}
 			else { // dependencies deleted
+				System.err.println(dependency);
 				try {
 					result.add(new DeletedDependency(dependency.getDependency()));
 				} catch(NoSuchObjectException nsoe) {

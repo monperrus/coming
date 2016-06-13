@@ -60,7 +60,9 @@ public class Main {
 	    xml.setNumberOfCommitInRepository(allGitCommit.size());
 	    
     	/* ANALYSIS COMMIT ONE BY ONE */
+	    int i=0;
     	for(Commit commit : allGitCommit) {
+    		System.out.print(i++ + " ");
     		List<FileCommit> javaCommitFiles = commit.getJavaFileCommits();
     		
     		for(FileCommit fileCommit : javaCommitFiles) {
@@ -72,7 +74,6 @@ public class Main {
 	    			/* ADDED CLASSES */
 	    			if(previousVersion.isEmpty()) {    				
 	    				rFile = new ResourceFile(fileCommit.getFileName(), nextVersion);
-	    				
 	    				try {
 	    					classFound = dependencyAnalyzer.analyze(rFile);
 	    					
@@ -84,10 +85,12 @@ public class Main {
 	    		        		xml.addCommitDate(commit.getRevDate());
 	    		        		xml.addCommitFile(fileCommit.getFileName());
 	    						xml.addClass(classFound, ActionType.INS);
-	    					}
+	    					} 
 						} 
 	    				catch (Exception e) {
-							System.err.println("Impossible to analyze "+ fileCommit.getFileName());
+	    					System.err.println("oops added  "+rFile.getPath());
+	    					e.printStackTrace();
+//                                                     throw new RuntimeException(e);
 						}
 	        		}
 	    			/* DELETED CLASSES */
@@ -108,7 +111,7 @@ public class Main {
 							}
 	    				}
 	    				catch (Exception e) {
-							System.err.println("Impossible to analyze "+ fileCommit.getFileName());
+                                                    throw new RuntimeException(e);
 	    				}
 	    			}
 	    			/* UPDATED CLASSES */
@@ -119,9 +122,10 @@ public class Main {
 							classFoundBefore = dependencyAnalyzer.analyze(rFile);
 	    					
 		    				// analysis for version after commit
-	    					rFile = new ResourceFile(fileCommit.getFileName(), previousVersion);
+	    					rFile = new ResourceFile(fileCommit.getFileName(), nextVersion);
 							classFoundAfter = dependencyAnalyzer.analyze(rFile);
 							
+							if (classFoundBefore!=null) {
 							// get correct dependency update
 							if(githubRepoUrl != null)
 								xml.addURLGithubCommit(githubRepoUrl, commit.getName());
@@ -130,9 +134,12 @@ public class Main {
 			        		xml.addCommitDate(commit.getRevDate());
 			        		xml.addCommitFile(fileCommit.getFileName());
 	    					xml.addClass(new Class(classFoundBefore.getName(), ClassType.REGULAR, DepTool.diff(classFoundBefore.getDependencies(), classFoundAfter.getDependencies())), ActionType.UPD);
+							}
 	    				}
 	    				catch (Exception e) {
-							System.err.println("Impossible to analyze "+ fileCommit.getFileName());
+	    					System.err.println("oops updated"+rFile);
+
+//                                                    throw new RuntimeException(e);
 	    				}
 	    			}
     			}

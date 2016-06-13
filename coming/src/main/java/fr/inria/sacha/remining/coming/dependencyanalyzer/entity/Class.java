@@ -23,10 +23,10 @@ public class Class {
 	 */
 	private Set<Dependency> dependencies;
 	
-	public Class(String name, ClassType type, Collection<Dependency> dependencies){
+	public Class(String name, ClassType type, Set<Dependency> dependencies){
 		this.type = type;
 		this.name = name;
-		this.dependencies = new HashSet<Dependency>(dependencies);
+		this.dependencies = dependencies;
 	}
 	
 	public ClassType getType() {

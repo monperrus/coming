@@ -80,7 +80,7 @@
 		<dependency> <!-- to analyze classe dependencies -->
 			<groupId>fr.inria.gforge.spoon</groupId>
 			<artifactId>spoon-core</artifactId>
-			<version>3.0-SNAPSHOT</version>
+			<version>5.1.0</version>
 		</dependency>
 
  		<!-- Dependencies for the JDT parser (mapping proccess)  -->
@@ -126,12 +126,12 @@
 			<scope>compile</scope>
 		</dependency>
 
-		<dependency>
+<!--		<dependency>
 			<groupId>eclipse</groupId>
 			<artifactId>org.eclipse.jdt.ui</artifactId>
 			<version>3.8.1.v20120814-144251</version>
 			<scope>compile</scope>
-		</dependency>
+		</dependency>-->
 
 		<dependency>
 			<groupId>org.eclipse.osgi</groupId>
@@ -140,12 +140,6 @@
 			<scope>compile</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>org.eclipse.jdt</groupId>
-			<artifactId>org.eclipse.jdt.core</artifactId>
-			<version>3.7.1</version>
-			<scope>compile</scope>
-		</dependency>
 		
 		<!-- DEPENDENCY ANALYZER FOR OUTPUT RESULTS -->
 		<dependency>
@@ -206,40 +200,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-install-plugin</artifactId>
 				<executions>
-					<execution>
-						<id>gt</id>
-						<phase>clean</phase>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-						<configuration>
-							<groupId>fr.labri.gumtree</groupId>
-							<artifactId>core</artifactId>
-							<version>0.0.1-SNAPSHOT</version>
-							<packaging>jar</packaging>
-							<file>${project.basedir}/lib/gt.jar</file>
-							<createChecksum>true</createChecksum>
-							<generatePom>true</generatePom>
-						</configuration>
-					</execution>
-
-					<execution>
-						<id>gt-par-jdt</id>
-						<phase>clean</phase>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-						<configuration>
-							<groupId>fr.labri.gumtree</groupId>
-							<artifactId>gen</artifactId>
-							<version>0.0.1-SNAPSHOT</version>
-							<packaging>jar</packaging>
-							<file>${project.basedir}/lib/genjdt.jar</file>
-							<createChecksum>true</createChecksum>
-							<generatePom>true</generatePom>
-						</configuration>
-					</execution>
-
 					<execution>
 						<id>eclipse-jdt-ui</id>
 						<phase>clean</phase>

@@ -53,7 +53,7 @@ public class Dependency {
 	
 	@Override
 	public int hashCode() { 
-	    return this.qualifiedName.hashCode();
+	    return -1;
 	}
 
 	@Override

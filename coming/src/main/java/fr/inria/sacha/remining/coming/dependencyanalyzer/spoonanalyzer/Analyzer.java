@@ -62,49 +62,30 @@ public class Analyzer {
 		inputSource.add(new FileSystemFile(rFile.toFile()));
 		
 		/* SPOON COMPILATION FOR ANALYSIS PROCESS */
-		this.spoon.run(
-				this.buildNewCompiler(), 
-				"UTF-8",  // encoding
-				false, // pre-compilation
-				OutputType.NO_OUTPUT, // output type
-				new File("/home/jimipepper/Git/spooned"), // output directory
-				new ArrayList<String>(), // processor types
-				true,  // compilation
-				null, // destination directory
-				true, // build only out-dated files
-				"/home/jimipepper/Git/spooned", // source class path
-				null, // no template class path
-				inputSource, // input sources
-				new ArrayList<SpoonResource>() // list of spoon resources
-		);
-		
-		/* ANALYSIS PROCESS */
-		this.buildNewManager().process();
-		
-		return this.processor.getAnalyzedClass();
-	}
-	
-	/**
-	 * Creates a SpoonCompiler object because currently a spoon compiler cans run only one time
-	 * 
-	 * @return a spoon compiler
-	 */
-	private SpoonCompiler buildNewCompiler() {
-		return this.spoon.createCompiler(this.factory);
-	}
-	
-	/**
-	 * Creates a new dependency processor object for each analysis
-	 * 
-	 * @return a process manager containing only one DependencyProcessor instance
-	 */
-	@SuppressWarnings("rawtypes") // for dependency processor instantiation
-	private ProcessingManager buildNewManager() {
-		ProcessingManager processManager = new QueueProcessingManager(factory);
+//		this.spoon.run(new String[]{ "-i ", rFile.getPath(), "-x"});
+		this.spoon.addInputResource(rFile.getPath());
 		this.processor = new DependencyProcessor();
-		processManager.addProcessor(this.processor);
-		
-		return processManager;
+		this.spoon.addProcessor(this.processor);
+		this.spoon.run();
+//		this.spoon.run(new String[]{ "-i ", rFile.getPath(), "-x"});
+//				this.buildNewCompiler(), 
+//				"UTF-8",  // encoding
+//				false, // pre-compilation
+//				OutputType.NO_OUTPUT, // output type
+//				new File("spooned"), // output directory
+//				new ArrayList<String>(), // processor types
+//				true,  // compilation
+//				null, // destination directory
+//				true, // build only out-dated files
+//				"target/classes", // source class path
+//				null, // no template class path
+//				inputSource, // input sources
+//				new ArrayList<SpoonResource>() // list of spoon resources
+//		);
+//		
+//		/* ANALYSIS PROCESS */
+//		this.buildNewManager().process();
+		return this.processor.getAnalyzedClass();
 	}
 	
 	/**
@@ -113,9 +94,9 @@ public class Analyzer {
 	private void prepareNewCompilation() {
 		this.spoon = new Launcher();
 		this.factory = spoon.getFactory();
-		
 		this.environment = this.factory.getEnvironment();
 		this.environment.setNoClasspath(true);
+		this.environment.setComplianceLevel(7);
 	}
 	
 	/**

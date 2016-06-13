@@ -2,25 +2,21 @@ package fr.inria.sacha.remining.coming.dependencyanalyzer.spoonanalyzer;
 
 import java.util.HashSet;
 
-import fr.inria.sacha.remining.coming.dependencyanalyzer.entity.Dependency;
+import org.apache.log4j.Logger;
+
+import spoon.processing.AbstractProcessor;
+import spoon.reflect.declaration.CtType;
+import spoon.reflect.reference.CtTypeReference;
 import fr.inria.sacha.remining.coming.dependencyanalyzer.entity.Class;
 import fr.inria.sacha.remining.coming.dependencyanalyzer.entity.Class.ClassType;
-import org.apache.log4j.Logger;
-import spoon.processing.AbstractProcessor;
-import spoon.reflect.code.CtStatement;
-import spoon.reflect.declaration.CtClass;
-import spoon.reflect.declaration.CtConstructor;
-import spoon.reflect.declaration.CtField;
-import spoon.reflect.declaration.CtMethod;
-import spoon.reflect.declaration.CtParameter;
-import spoon.reflect.reference.CtTypeReference;
+import fr.inria.sacha.remining.coming.dependencyanalyzer.entity.Dependency;
 
 /**
  * Analyzes a JAVA class to list all (non-static) dependencies
  * @param <T>
  * @author Romain Philippon
  */
-public class DependencyProcessor<T> extends AbstractProcessor<CtClass<T>> {
+public class DependencyProcessor<T> extends AbstractProcessor<CtType<T>> {
 
 	/**
 	 * Is the logger instance which log all dependencies found by this processor
@@ -39,75 +35,81 @@ public class DependencyProcessor<T> extends AbstractProcessor<CtClass<T>> {
 	 * Launches a dependency class analysis on super class, implemented interfaces, method's parameters and statements and method return statement type
 	 */
 	@Override
-	public void process(CtClass<T> loadedClass) {
+	public void process(CtType<T> loadedClass) {
 		CtTypeReference<?> currentType;
-		HashSet<Dependency> dependencies = new HashSet<Dependency>();
+		final HashSet<Dependency> dependencies = new HashSet<Dependency>();
+		this.analyzedClass = new Class(loadedClass.getQualifiedName(), ClassType.REGULAR, dependencies);
 
-		/* INHERITANCE AND IMPLEMENTATION ANALYSIS */
-		// super class
-		currentType = loadedClass.getSuperclass();
-
-		if(currentType != null) {
-			dependencies.add(new Dependency(currentType));
-		}
-
-		// interfaces
-		for(CtTypeReference<?> interfaceImplemented : loadedClass.getSuperInterfaces()){
-			dependencies.add(new Dependency(interfaceImplemented));
-		}
-
-		/* ATTRIBUTE ANALYSIS */
-		for(CtField<?> attribute : loadedClass.getFields()) {
-			for(CtTypeReference<?> type : attribute.getReferencedTypes()) {
-				if (!this.isVoidType(type) && !this.isPrimitiveType(type)) {
-					dependencies.add(new Dependency(type));
-				}
+		for(CtTypeReference<?> type : loadedClass.getReferencedTypes()) {
+			if (!this.isVoidType(type) && !this.isPrimitiveType(type)) {
+				dependencies.add(new Dependency(type));
 			}
 		}
-
-		/* CONSTRUCTOR ANALYSIS */
-		for(CtConstructor<?> constructor : loadedClass.getConstructors()) {
-			for(CtStatement statement : constructor.getBody().getStatements()) {
-				for(CtTypeReference<?> type : statement.getReferencedTypes()) {
-					if (!this.isVoidType(type) && !this.isPrimitiveType(type)) {
-						dependencies.add(new Dependency(type));
-					}
-				}
-			}
-		}
-
-		/* METHOD ANALYSIS */
-		for(CtMethod<?> method: loadedClass.getAllMethods()) {
-			// parameter type
-			for(CtParameter<?> param : method.getParameters()) {
-				currentType = param.getType();
-				
-				if(!this.isVoidType(currentType) && !this.isPrimitiveType(currentType)) {
-					dependencies.add(new Dependency(currentType));
-				}
-			}
-
-			// all statement type include in method body
-			for(CtStatement statement : method.getBody().getStatements()) {
-				for(CtTypeReference<?> type : statement.getReferencedTypes()) {
-					if(!this.isVoidType(type) && !this.isPrimitiveType(type)) {
-						dependencies.add(new Dependency(type));
-					}
-				}
-			}
-		}
-
-		/* LOG ANALYSIS */
-		logger.info(":::::::::: " + loadedClass.getQualifiedName());
-		for(Dependency dependency : dependencies) {
-			logger.info("\t"+ dependency.getQualifiedDependencyName());
-		}
+		
+//		/* INHERITANCE AND IMPLEMENTATION ANALYSIS */
+//		// super class
+//		currentType = loadedClass.getSuperclass();
+//		if(currentType != null) {
+//			dependencies.add(new Dependency(currentType));
+//		}
+//
+//		// interfaces
+//		for(CtTypeReference<?> interfaceImplemented : loadedClass.getSuperInterfaces()){
+//			dependencies.add(new Dependency(interfaceImplemented));
+//		}
+//
+//		/* ATTRIBUTE ANALYSIS */
+//		for(CtField<?> attribute : loadedClass.getFields()) {
+//			for(CtTypeReference<?> type : attribute.getReferencedTypes()) {
+//				if (!this.isVoidType(type) && !this.isPrimitiveType(type)) {
+//					dependencies.add(new Dependency(type));
+//				}
+//			}
+//		}
+//
+//		/* CONSTRUCTOR ANALYSIS */
+//		for(CtConstructor<?> constructor : loadedClass.getConstructors()) {
+//			for(CtStatement statement : constructor.getBody().getStatements()) {
+//				for(CtTypeReference<?> type : statement.getReferencedTypes()) {
+//					if (!this.isVoidType(type) && !this.isPrimitiveType(type)) {
+//						dependencies.add(new Dependency(type));
+//					}
+//				}
+//			}
+//		}
+//
+//		/* METHOD ANALYSIS */
+//		for(CtMethod<?> method: loadedClass.getAllMethods()) {
+//			if (method.getBody()==null) continue;
+//			// parameter type
+//			for(CtParameter<?> param : method.getParameters()) {
+//				currentType = param.getType();
+//				
+//				if(!this.isVoidType(currentType) && !this.isPrimitiveType(currentType)) {
+//					dependencies.add(new Dependency(currentType));
+//				}
+//			}
+//
+//			// all statement type include in method body
+//			for(CtStatement statement : method.getBody().getStatements()) {
+//				for(CtTypeReference<?> type : statement.getReferencedTypes()) {
+//					if(!this.isVoidType(type) && !this.isPrimitiveType(type)) {
+//						dependencies.add(new Dependency(type));
+//					}
+//				}
+//			}
+//		}
+//
+//		/* LOG ANALYSIS */
+//		logger.info(":::::::::: " + loadedClass.getQualifiedName());
+//		for(Dependency dependency : dependencies) {
+//			logger.info("\t"+ dependency.getQualifiedDependencyName());
+//		}
 
 		/* DELETE USELESS DEPENDENCY */
 		dependencies.remove(new Dependency(getFactory().Class().OBJECT));
 		dependencies.remove(new Dependency(loadedClass.getReference()));
 
-		this.analyzedClass = new Class(loadedClass.getQualifiedName(), ClassType.REGULAR, dependencies);
 	}
 
 	/**

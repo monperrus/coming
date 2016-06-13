@@ -42,7 +42,7 @@ public class ResourceFile implements SpoonFile {
 		this.fileName = fileName;
 		this.content = content;
 		
-		this.file = new File("/home/jimipepper/Git/sourceSpoon/"+ this.fileName);
+		this.file = new File(this.fileName);
 		 
 		if (!this.file.exists()) {
 			this.file.createNewFile();
